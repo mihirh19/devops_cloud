@@ -1,4 +1,4 @@
-package main
+package variables
 
 import (
 	"fmt"
@@ -11,6 +11,7 @@ func main() {
 		c int = 3
 	)
 
+	const d int = 4
 	fmt.Println(a, b, c)
-
+	fmt.Println(d)
 }

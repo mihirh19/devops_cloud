@@ -1,2 +1,2 @@
-#!/usr/bin/python
-print("Hello this is python script")
+#!/bin/bash
+python3 -c 'print("Hello, this is a Python script")'
