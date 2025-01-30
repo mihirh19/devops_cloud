@@ -8,5 +8,21 @@
       file:
         path: /tmp/newfile.txt
         state: touch
-
+        owner: mihir
+        group: mihir
+        mode: u=rwx,g=rw,o=r
+    - name: creating a directory
+      file:
+        path: /tmp/myfolder
+        state: directory
+        owner: mihir
+        group: mihir
+    - name: delete file
+      file:
+        path: /tmp/newfile.txt
+        state: absent
+    - name: change permission of directory
+      file:
+        path: /tmp/myfolder
+        mode: u=rwx,g=rw,o=r
   
