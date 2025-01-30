@@ -1,0 +1,12 @@
+---
+
+- name: file module
+  hosts: all
+  
+  tasks:
+    - name: creating a file
+      file:
+        path: /tmp/newfile.txt
+        state: touch
+
+  
