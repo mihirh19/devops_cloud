@@ -1,0 +1,15 @@
+---
+
+- name: Run a script
+  hosts: all
+  
+  tasks:
+    - name: copy script file
+      copy:
+        src: ./scripts/test.sh
+        dest: /tmp/
+        owner: mihir
+        mode: 0755
+    - name: run a script
+      shell: "sh /tmp/test.sh"
+      

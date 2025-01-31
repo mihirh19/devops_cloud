@@ -1,0 +1,29 @@
+---
+
+- name: Cron setup
+  hosts: all
+  
+  tasks:
+    - name: copy script file to remote server
+      copy:
+        src: ./scripts/test.sh
+        dest: /tmp/
+        owner: mihir
+        mode: 0755
+        
+    - name: add a cron job
+      cron:
+        name: run a script
+        minute: 30
+        hour: 18
+        day: 15
+        month: "*"
+        weekday: "*"
+        user: mihir
+        job: "sh /tmp/test.sh"
+        
+    - name: remove a cron job
+      cron:
+        name: run a script
+        state: absent
+        user: mihir
