@@ -1,0 +1,7 @@
+grafana:
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClassName: standard  # Use an appropriate storage class

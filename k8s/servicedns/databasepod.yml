@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: database
+  labels: 
+    app: myapp
+spec:
+  containers: 
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+      imagePullPolicy: Never
+      resources:
+        requests:
+          memory: 1Mi
+        limits:
+          memory: 200Mi

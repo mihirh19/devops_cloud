@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: pod3
+  labels: 
+    app: myapp
+    type: fontend
+
+spec:
+  containers: 
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+  nodeSelector:
+    size: "large"

@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  database_ip: 192.168.0.4
+  name: mihir
+kind: ConfigMap
+metadata:
+  name: cm1
+  namespace: default

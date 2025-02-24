@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 100m
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+  namespace: myns
+spec:
+  containers:
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 100m
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod3
+  namespace: myns2
+spec:
+  containers:
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 100m
+---
+

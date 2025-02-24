@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firstdeploy
+  labels:
+    name: firstdeploy
+  annotations: 
+    kubernetes.io/change-cause: "latest version"
+spec:
+     replicas: 5
+     selector:
+       matchLabels:
+          app: myapp
+     template:
+       metadata:
+          name: dpod
+          labels:
+            app: myapp
+       spec:
+         containers:
+          - name: container
+            image: coolgourav147/nginx-custom

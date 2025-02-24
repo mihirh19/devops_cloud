@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: pod3
+  labels: 
+    app: myapp
+spec:
+  containers: 
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+      volumeMounts:
+        - mountPath: /data
+          name: first-volume
+  volumes:
+    - name: first-volume
+      persistentVolumeClaim:
+        claimName: mongo-pvc

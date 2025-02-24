@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: pod3
+  labels: 
+    app: myapp
+    type: fontend
+
+spec:
+  containers: 
+    - name: firstcontainer
+      image: coolgourav147/nginx-custom
+      resources:
+        requests:
+          memory: "1Mi"
+        limits:
+          memory: 200Mi
