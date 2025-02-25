@@ -27,7 +27,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - worker3
+                - mihir
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -64,7 +64,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - worker3
+                - mihir
 
 ---
 apiVersion: v1
@@ -102,7 +102,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - worker3
+                - mihir
 
 ---
 apiVersion: v1
@@ -140,7 +140,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - worker3
+                - mihir
 
 ---
 apiVersion: v1
@@ -180,7 +180,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - worker3
+                - mihir
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

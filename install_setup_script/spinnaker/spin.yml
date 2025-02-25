@@ -44,6 +44,12 @@ spec:
         instance: pod-halyard
         role: pod-halyard
     spec:
+      hostAliases:
+      - ip: "192.168.230.128"
+        hostnames:
+        - "mihir.spinnaker.com"
+        - "mihir.harbor.com"
+        - "gate.mihir.spinnaker.com"
       containers:
         - image: 'us-docker.pkg.dev/spinnaker-community/docker/halyard:stable'
           imagePullPolicy: IfNotPresent
