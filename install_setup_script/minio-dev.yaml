@@ -1,0 +1,185 @@
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minio-dev 
+  labels:
+    name: minio-dev 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+  namespace: minio-dev
+spec:
+  selector:
+    app: minio
+  ports:
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+      #nodePort: 30000
+      name: minio-ui
+    - name: minio-api
+      port: 9000
+      targetPort: 9000
+      protocol: TCP
+      #nodePort: 30001
+  type: ClusterIP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio-ingress
+  namespace: minio-dev
+  annotations:
+  #  nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mihir.minio.com  # Change to your domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: minio-service
+            port:
+              number: 9090
+      - path: /minio
+        pathType: Prefix
+        backend:
+          service:
+           name: minio-service
+           port:
+             number: 9000
+---
+
+#
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: minio-api-ingress
+#  namespace: minio-dev
+#  annotations:
+#  #  nginx.ingress.kubernetes.io/rewrite-target: /
+#    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#  - host: api.mihir.minio.com  # Change to your domain
+#    http:
+#      paths:
+#      - path: /
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: minio-service
+#            port:
+#              number: 9000
+
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: minio-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+      name: minio
+      namespace: minio-dev
+
+    spec:
+      containers:
+        - name: minio
+          image: quay.io/minio/minio:latest
+          command:
+            - /bin/bash
+            - -c
+          args:
+            - minio server /data --console-address ":9090" --address ":9000"  
+          env:
+            - name: MINIO_ROOT_USER
+              value: mihir
+            - name: MINIO_ROOT_PASSWORD
+              value: mihir123
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /data
+              name: local-pv 
+      volumes:
+        - name: local-pv
+          persistentVolumeClaim:
+            claimName: minio-pvc
+
+
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: minio
+  namespace: minio-dev
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minio-pv
+  namespace: minio-dev
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: minio
+  hostPath:
+    path: /home/mihir/volume/minio
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - mihir
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc
+  namespace: minio-dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: minio
+---

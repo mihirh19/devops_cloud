@@ -50,6 +50,7 @@ spec:
         - "mihir.spinnaker.com"
         - "mihir.harbor.com"
         - "gate.mihir.spinnaker.com"
+        - "mihir.minio.com"
       containers:
         - image: 'us-docker.pkg.dev/spinnaker-community/docker/halyard:stable'
           imagePullPolicy: IfNotPresent
