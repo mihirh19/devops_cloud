@@ -5,7 +5,7 @@ metadata:
   labels:
     name: firstdeploy
 spec:
-     replicas: 5
+     replicas: 2
      minReadySeconds: 10
      strategy:
        rollingUpdate:

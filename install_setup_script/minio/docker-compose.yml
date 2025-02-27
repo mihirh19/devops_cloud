@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    restart: unless-stopped
+    ports:
+      - "6000:9000"
+      - "6001:9001"
+    environment:
+      MINIO_ROOT_USER: mihir
+      MINIO_ROOT_PASSWORD: mihir123
+    volumes:
+      - ~/minio/data:/data
+    command: server /data --console-address ":6001" --address ":6000"
+    network_mode: "host"
