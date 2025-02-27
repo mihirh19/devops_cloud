@@ -47,7 +47,7 @@ expose:
       ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+#      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     # ingress-specific labels
     labels: {}
   clusterIP:

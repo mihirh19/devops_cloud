@@ -64,13 +64,15 @@ spec:
               name: hal-vol
             - mountPath: /home/spinnaker/.kube
               name: kube-vol
+            - mountPath: /var/gcp
+              name: gcp-acc
       initContainers:
         - command:
             - sh
             - '-c'
             - >-
               mkdir -p /home/spinnaker/.hal && chown -R 1000:1000
-              /home/spinnaker/.hal 
+              /home/spinnaker/.hal && mkdir -p /var/gcp
           image: busybox
           imagePullPolicy: Always
           name: update-permission-crt
@@ -90,3 +92,7 @@ spec:
             path: /root/.kube/
             type: '' 
           name: kube-vol
+        - name: gcp-acc
+          configMap:
+            name: gcp
+
