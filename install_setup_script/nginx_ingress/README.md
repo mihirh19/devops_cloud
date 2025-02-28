@@ -23,6 +23,6 @@ Before running the script, ensure you have the following installed:
 1️⃣ **Download the script**  
 
 ```sh
-curl -o install-ingress.sh https://raw.githubusercontent.com/mihirh19/devops_cloud/refs/heads/main/install_setup_script/metallb/installnginxingress.sh
+curl -o install-ingress.sh https://raw.githubusercontent.com/mihirh19/devops_cloud/refs/heads/main/install_setup_script/nginx_ingress/installnginxingress.sh
 chmod +x install-ingress.sh
 ```
