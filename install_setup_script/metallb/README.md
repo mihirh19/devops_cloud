@@ -22,11 +22,29 @@ Before running this script, ensure you have:
 If you need Helm, install it using:  
 ```sh
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
+```
 
 # 🔧 Installation & Usage
 
 ## 1️⃣ Download the script
 ```sh
-curl -O https://github.com/mihirh19/devops_cloud/install_setup_script/metallb/installmetallb.sh
+curl -O https://raw.githubusercontent.com/mihirh19/devops_cloud/refs/heads/main/install_setup_script/metallb/installmetallb.sh
+```
+
+## 2️⃣ Give execute permissions
+```sh
+chmod +x installmetallb.sh
+```
+
+## 3️⃣ Run the script  
+```sh
+./setup_metallb.sh
+```
+
+
+# 🎯 Verifying Installation
+✅ Check if MetalLB is running
+
+```sh
+kubectl get pods -n metallb-system
 ```
