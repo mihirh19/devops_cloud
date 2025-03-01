@@ -1,0 +1,26 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: custom-runner
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: mihir-hadavani-inventyv/k8s-yml
+      labels:
+        - custom-runner
+      containers:
+        - name: runner
+          image: summerwind/actions-runner:latest
+          securityContext:
+            privileged: true  # Allow Docker daemon to run inside the container
+          volumeMounts:
+            - name: docker-config
+              mountPath: /etc/docker/daemon.json
+              subPath: daemon.json
+      volumes:
+        - name: docker-config
+          configMap:
+            name: docker-insecure-config
+            
+

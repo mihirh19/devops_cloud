@@ -1,0 +1,23 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: custom-runner
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: mihir-hadavani-inventyv/k8s-yml
+      labels:
+        - custom-runner
+      containers:
+        - name: runner
+          image: summerwind/actions-runner:latest
+          securityContext:
+            privileged: true  # Required to use the Docker socket
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
