@@ -226,6 +226,13 @@ hal version list
 hal config version edit --version $VERSION
 
 hal deploy apply
+
+hal config security ui edit \
+    --override-base-url "http://mihir.spinnaker.com"          # this is ingress
+
+hal config security api edit \
+    --override-base-url "http://gate.mihir.spinnaker.com"    # this is ingress
+
 ```
 
 ## 📡 Step 3: Configure Google Cloud Pub/Sub
