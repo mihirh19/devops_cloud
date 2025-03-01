@@ -41,17 +41,31 @@ for plugin in "${PLUGINS[@]}"; do
     fi
 done
 
-# Update .zshrc
-echo "🎨 Setting theme to 'fino'..."
-sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="fino"/g' ~/.zshrc
+# Update .zshrc configurations
+ZSHRC="$HOME/.zshrc"
 
+# Ensure completion scripts are sourced
+echo "🔍 Checking and adding completion scripts..."
+grep -qxF 'source <(kubectl completion zsh)' "$ZSHRC" || echo 'source <(kubectl completion zsh)' >> "$ZSHRC"
+grep -qxF 'source <(helm completion zsh)' "$ZSHRC" || echo 'source <(helm completion zsh)' >> "$ZSHRC"
+
+# Ensure alias for kubecolor is set
+echo "🔍 Checking and adding alias for kubectl..."
+grep -qxF 'alias kubectl=kubecolor' "$ZSHRC" || echo 'alias kubectl=kubecolor' >> "$ZSHRC"
+grep -qxF 'compdef kubecolor=kubectl' "$ZSHRC" || echo 'compdef kubecolor=kubectl' >> "$ZSHRC"
+
+# Update theme if not already set
+echo "🎨 Setting theme to 'fino'..."
+sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="fino"/g' "$ZSHRC"
+
+# Ensure plugins are added in .zshrc
 echo "🔧 Updating plugins in .zshrc..."
-if ! grep -q "plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl)" ~/.zshrc; then
-    sed -i 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl)/g' ~/.zshrc
+if ! grep -q 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl)' "$ZSHRC"; then
+    sed -i 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl)/g' "$ZSHRC"
 fi
 
 # Apply changes
-echo "🔄 Switching to Zsh..."
+echo "🔄 Reloading Zsh configuration..."
 exec zsh
 
 echo "🎉 Setup complete! Restart your terminal or log out and log back in for full effect 🚀"
