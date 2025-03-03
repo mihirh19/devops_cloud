@@ -93,8 +93,8 @@ spec:
             type: ''
           name: kube-vol
         - name: gcp-acc
-          configMap:
-            name: gcp
+          secret:
+            secretName: gcp
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

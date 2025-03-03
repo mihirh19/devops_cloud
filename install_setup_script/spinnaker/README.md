@@ -132,8 +132,8 @@ spec:
             type: '' 
           name: kube-vol
         - name: gcp-acc
-          configMap:
-            name: gcp
+          secret:
+            secretName: gcp
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -281,8 +281,8 @@ gcloud iam service-accounts keys create $SERVICE_ACCOUNT_DEST \
 ### 🔹 4.1 Create a ConfigMap
 
 ```sh
-kubectl create configmap gcp \
-    --from-file=service-account.json=$HOME/spinnaker-pubsub-key.json \
+kubectl create secret generic gcp \
+    --from-file=$HOME/spinnaker-pubsub-key.json \
     -n default
 
 ```
@@ -307,11 +307,8 @@ spec:
               readOnly: true
       volumes:
         - name: gcp-acc
-          configMap:
-            name: gcp-service-account
-            items:
-              - key: service-account.json
-                path: service-account.json
+          secret:
+            secretName: gcp
 ```
 
 ```sh
