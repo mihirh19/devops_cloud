@@ -9,15 +9,35 @@ spec:
       repository: mihir-hadavani-inventyv/k8s-yml
       labels:
         - custom-runner
+      hostAliases:
+        - ip: "192.168.230.128"
+          hostnames:
+            - "mihir.harbor.com"
       containers:
         - name: runner
           image: summerwind/actions-runner:latest
           securityContext:
-            privileged: true  # Required to use the Docker socket
+            privileged: true  # Required for Docker-in-Docker
           volumeMounts:
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
+            - name: docker-config
+              mountPath: /etc/docker/daemon.json
+              subPath: daemon.json
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Fixing permissions..."
+              sudo chmod 777 /etc/docker/daemon.json
+              sudo chmod 777 /var/log
+              
+              echo "Restarting Docker with insecure registry..."
+              sudo pkill dockerd || true
+              sudo nohup dockerd --host=unix:///var/run/docker.sock --insecure-registry mihir.harbor.com --storage-driver=overlay2 > /var/log/dockerd.log 2>&1 &
+              
+              sleep 5
+              docker info
+              echo "Starting GitHub Actions Runner..."
+              /runner/run.sh  # Correct entry point
       volumes:
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
+        - name: docker-config
+          configMap:
+            name: docker-insecure-config
