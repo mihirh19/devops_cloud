@@ -4,7 +4,7 @@ on:
       
 jobs:
    hello_world:
-      runs-on: custom-runner-devops
+      runs-on: ubuntu-latest
       steps:
          - name: Echo current time
            run: echo "The current time $(date)"
