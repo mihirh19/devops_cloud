@@ -6,7 +6,7 @@ spec:
   replicas: 1
   template:
     spec:
-      repository: mihir-hadavani-inventyv/devops_cloud
+      repository: mihir-hadavani-inventyv/ci_cd_workflow
       labels:
         - custom-runner-devops
 
