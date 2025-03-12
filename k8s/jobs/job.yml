@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: check-image-pull
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      containers:
+        - args:
+            - >
+              if kubectl get pod -l app=myapp -n default -o
+              jsonpath='{.items[*].status.containerStatuses[*].state.waiting.reason}'
+              | grep -i "ImagePullBackOff"; then
+                exit 0
+              else
+                exit 1
+              fi
+          command:
+            - bash
+            - '-c'
+          image: bitnami/kubectl
+          name: check-image
+          volumeMounts:
+            - mountPath: /.kube
+              name: kubectl-config
+      restartPolicy: Never
+      volumes:
+        - hostPath:
+            path: /root/.kube
+          name: kubectl-config

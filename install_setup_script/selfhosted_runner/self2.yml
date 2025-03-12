@@ -6,38 +6,26 @@ spec:
   replicas: 1
   template:
     spec:
-      repository: mihir-hadavani-inventyv/k8s-yml
+      repository: mihir-hadavani-inventyv/k8s-yml  # Your GitHub repo
       labels:
-        - custom-runner
+        - custom-runner  # Label for workflow targeting
       hostAliases:
-        - ip: "192.168.230.128"
+        - ip: "192.168.230.128"  # Your Harbor registry IP
           hostnames:
-            - "mihir.harbor.com"
-      containers:
-        - name: runner
-          image: summerwind/actions-runner:latest
-          securityContext:
-            privileged: true  # Required for Docker-in-Docker
-          volumeMounts:
-            - name: docker-config
-              mountPath: /etc/docker/daemon.json
-              subPath: daemon.json
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              echo "Fixing permissions..."
-              sudo chmod 777 /etc/docker/daemon.json
-              sudo chmod 777 /var/log
-              
-              echo "Restarting Docker with insecure registry..."
-              sudo pkill dockerd || true
-              sudo nohup dockerd --host=unix:///var/run/docker.sock --insecure-registry mihir.harbor.com --storage-driver=overlay2 > /var/log/dockerd.log 2>&1 &
-              
-              sleep 5
-              docker info
-              echo "Starting GitHub Actions Runner..."
-              /runner/run.sh  # Correct entry point
+            - "mihir.harbor.com"  # Hostname for Harbor
       volumes:
         - name: docker-config
           configMap:
             name: docker-insecure-config
+      containers:
+        - name: runner
+          image: summerwind/actions-runner:latest
+          volumeMounts:
+            - name: docker-config
+              mountPath: /etc/docker/daemon.json
+              subPath: daemon.json
+      #dockerdWithinRunnerContainer: true
+       # Mount only the daemon.json file
+      # Optional: Uncomment if you need to pin to a specific node
+      # nodeSelector:
+      #   kubernetes.io/hostname: <your-node-name>
