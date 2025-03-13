@@ -6,26 +6,21 @@ spec:
   replicas: 1
   template:
     spec:
-      repository: mihir-hadavani-inventyv/k8s-yml  # Your GitHub repo
+      repository: mihir-hadavani-inventyv/k8s-yml
       labels:
-        - custom-runner  # Label for workflow targeting
+        - custom-runner
       hostAliases:
-        - ip: "192.168.230.128"  # Your Harbor registry IP
+        - ip: "192.168.230.128"
           hostnames:
-            - "mihir.harbor.com"  # Hostname for Harbor
-      volumes:
-        - name: docker-config
-          configMap:
-            name: docker-insecure-config
+            - "mihir.harbor.com"
       containers:
         - name: runner
           image: summerwind/actions-runner:latest
+
           volumeMounts:
-            - name: docker-config
-              mountPath: /etc/docker/daemon.json
-              subPath: daemon.json
-      #dockerdWithinRunnerContainer: true
-       # Mount only the daemon.json file
-      # Optional: Uncomment if you need to pin to a specific node
-      # nodeSelector:
-      #   kubernetes.io/hostname: <your-node-name>
+            - name: docker-sock
+              mountPath: /var/run/docker.sock  # Use host Docker
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock  # Mount host's Docker socket
