@@ -12,7 +12,7 @@ githubConfigUrl: "https://github.com/mihir-hadavani-inventyv/k8s-yml"
 githubConfigSecret:
   # Example:
   # github_token: "ghp_sampleSampleSampleSampleSampleSample"
-  github_token: "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"
+  github_token: ""
 #
 ## (Variation B) When using a GitHub App, the syntax is as follows:
 # githubConfigSecret:
