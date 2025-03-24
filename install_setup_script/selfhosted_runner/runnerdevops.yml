@@ -1,12 +1,86 @@
-apiVersion: actions.summerwind.dev/v1alpha1
-kind: RunnerDeployment
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: custom-runner-devops
+  name: github-runner
+  labels:
+    app: github-runner
+  namespace: github-runner
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: github-runner
   template:
-    spec:
-      repository: mihir-hadavani-inventyv/ci_cd_workflow
+    metadata:
       labels:
-        - custom-runner-devops
+        app: github-runner
+    spec:
+      hostAliases:
+      - ip: "192.168.230.128"
+        hostnames:
+        - "mihir.spinnaker.com"
+        - "mihir.harbor.com"
+        - "gate.mihir.spinnaker.com"
+        - "mihir.minio.com"
+
+   #   securityContext:
+   #     runAsUser: 1000  # Non-root user
+   #     runAsGroup: 1000 # Group ID
+      containers:
+        - name: github-runner
+          image: mihirinventyv/custom-runner-image
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              sudo chmod 777 /var/run/docker.sock;
+              ./entrypoint.sh
+          env:
+            - name: GITHUB_OWNER
+              value: mihir-hadavani-inventyv
+            - name: GITHUB_REPOSITORY
+              value: ci_cd_workflow
+            - name: GITHUB_PAT # stored separately in a Kubernetes secret
+              valueFrom:
+                secretKeyRef:
+                  name: gh-pat
+                  key: pat
+          volumeMounts: 
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
+            - name: docker-config
+              mountPath: /etc/docker/daemon.json
+            - name: docker
+              mountPath: /usr/bin/docker
+  #          - name: gcloud
+  #            mountPath: /usr/bin/gcloud
+  #          - name: pub-sub-credentials
+  #            mountPath: /root/.config/gcloud
+
+
+        # - name: github-python-runner
+        #   image: python:3.10-alpine
+        #   args:
+        #     - |
+        #       pip install google-cloud-pubsub
+      volumes:
+
+        - name: docker-config
+          hostPath:
+            path: /etc/docker/daemon.json
+            type: File
+
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+
+        - name: docker
+          hostPath:
+            path: /usr/bin/docker  # Change this path if needed
+            type: File
+
+
+ #       - name: gcloud
+ #         hostPath:
+ #           path: /usr/bin/gcloud
 
