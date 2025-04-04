@@ -1,0 +1,54 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: prometheus
+  namespace: kube-prometheus-stack
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prometheus-pv-1
+  namespace: kube-prometheus-stack
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /home/mihir/volume/prometheus
+  storageClassName: prometheus
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mihir
+            
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prometheus-grafana
+  namespace: kube-prometheus-stack
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /home/mihir/volume/grafana
+  storageClassName: prometheus
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mihir
