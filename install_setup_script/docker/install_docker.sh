@@ -13,24 +13,24 @@ check_docker() {
 # 🛠️ Function to install Docker
 install_docker() {
     echo "🔍 Updating package lists..."
-    sudo apt update -y
+    sudo apt-get update -y
 
     echo "📦 Installing dependencies..."
-    sudo apt install -y ca-certificates curl gnupg
+    sudo apt-get install -y ca-certificates curl
 
     echo "🔑 Adding Docker’s official GPG key..."
     sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.gpg > /dev/null
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     echo "📜 Setting up the Docker repository..."
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"${UBUNTU_CODENAME:-$VERSION_CODENAME}\") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     echo "🔄 Updating package index again..."
-    sudo apt update -y
+    sudo apt-get update -y
 
     echo "🐳 Installing Docker..."
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
     echo "⚙️ Enabling and starting Docker service..."
     sudo systemctl enable docker
@@ -44,6 +44,6 @@ install_docker() {
     fi
 }
 
-# 🚀 Run checks and install if needed
+# Run the script
 check_docker
 install_docker
